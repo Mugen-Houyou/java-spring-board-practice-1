@@ -16,6 +16,9 @@ import lombok.*;
 @Builder
 @JsonNaming(value= PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class PostRequest {
+
+    private Long boardId = 1L; // 디폴트로 1L 일단 지정
+
     @NotBlank
     @Size(min=4, max=32)
     private String userName;

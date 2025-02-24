@@ -1,5 +1,6 @@
 package com.gabe.simpleboardarti.post.service;
 
+import com.gabe.simpleboardarti.board.db.BoardRepository;
 import com.gabe.simpleboardarti.post.db.PostEntity;
 import com.gabe.simpleboardarti.post.db.PostRepository;
 import com.gabe.simpleboardarti.post.model.PostRequest;
@@ -20,13 +21,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final BoardRepository boardRepository;
     private final ReplyService replyService;
 
     public PostEntity create(
             PostRequest postRequest
+
     ){
+        var boardEntity = boardRepository.findById(postRequest.getBoardId()).get(); // 그냥 .get()을 박으면 안됨 ==> TODO: 해당 부분 수정 필요
         var result = PostEntity.builder()
-                .boardId(1L) // ==> 1로 임시 고정!
+                .board(boardEntity) // ==> 1로 임시 고정!
                 .userName(postRequest.getUserName())
                 .password(postRequest.getPassword())
                 .status("REGISTERED")
@@ -50,7 +54,7 @@ public class PostService {
                     // entity 존재할 때?
                     if(it.getPassword().equals(postViewRequest.getPassword())){
                         log.info("게시글 열람하였음.{}",it.getId());
-                        it.setListReplies(replyService.findAllByPostId(it.getId()));
+//                        it.setListReplies(replyService.findAllByPostId(it.getId()));
                         return it;
                     }else{
                         var formattedMessage = "암호 틀림! 실제 암호: %s / 입력 암호: %s";
