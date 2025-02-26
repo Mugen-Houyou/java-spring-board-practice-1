@@ -14,6 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BoardRequest {
+
     @NotBlank
     private String boardName;
 

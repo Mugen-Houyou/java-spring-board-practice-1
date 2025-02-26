@@ -1,12 +1,16 @@
 package com.gabe.simpleboardarti.post.controller;
 
+import com.gabe.simpleboardarti.common.Api;
 import com.gabe.simpleboardarti.post.db.PostEntity;
 import com.gabe.simpleboardarti.post.model.PostRequest;
 import com.gabe.simpleboardarti.post.model.PostViewRequest;
 import com.gabe.simpleboardarti.post.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -15,6 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostApiController {
     private final PostService postService;
+
+    // CRUD (Create / Read / Update / Delete / List)
 
     @PostMapping("")
     public PostEntity create(
@@ -34,10 +40,12 @@ public class PostApiController {
     }
 
     @GetMapping("/all")
-    public List< PostEntity> list(
-
+    public Api<List< PostEntity>> list(
+            // TODO: size의 최대 크기 제한하는 방법 알아오기!
+            @PageableDefault(page=0,size=10,sort="id",direction = Sort.Direction.DESC) // 0번부터 시작, 단위는 10개, id 기준 내림차순 (descending)
+            Pageable pageable
     ){
-        return postService.all();
+        return postService.all(pageable);
     }
 
     @PostMapping("/delete")

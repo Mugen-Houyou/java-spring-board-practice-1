@@ -24,8 +24,8 @@ public class BoardApiController {
     }
 
     @GetMapping("/id/{id}")
-    public BoardDto view( // TODO: Entity가 아니라 얘에 상응하는 DTO를 내려야 한다.
-                          @PathVariable Long id
+    public BoardDto view(
+          @PathVariable Long id
     ){
         return boardService.view(id);
     }

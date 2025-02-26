@@ -29,7 +29,6 @@ public class BoardEntity {
             mappedBy = "board" // PostEntity에 가면 해당 변수 (board)가 있어야 함.
     )  // 1개의 BoardEntity는 N개의 PostEntity를 가진다.
        // 반대로, PostEntity에 가서, 해당 부분을 @ManyToOne(mappedBy="post") 지정 필요.
-    // TODO: Pagination 구현해보기!!
     @SQLRestriction("status = 'REGISTERED'")
     @Builder.Default // Builder 패턴으로 생성 시 누락되지 않게 하기 위함.
     private List<PostEntity> postEntityList = List.of();

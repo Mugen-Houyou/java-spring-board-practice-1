@@ -1,19 +1,21 @@
 package com.gabe.simpleboardarti.post.service;
 
 import com.gabe.simpleboardarti.board.db.BoardRepository;
+import com.gabe.simpleboardarti.common.Api;
+import com.gabe.simpleboardarti.common.Pagination;
 import com.gabe.simpleboardarti.post.db.PostEntity;
 import com.gabe.simpleboardarti.post.db.PostRepository;
 import com.gabe.simpleboardarti.post.model.PostRequest;
 import com.gabe.simpleboardarti.post.model.PostViewRequest;
-import com.gabe.simpleboardarti.reply.db.ReplyEntity;
 import com.gabe.simpleboardarti.reply.service.ReplyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
+//import org.springframework.data.domain ;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -66,8 +68,22 @@ public class PostService {
                 });
     }
 
-    public List<PostEntity> all() {
-        return postRepository.findAll();
+    public Api<List<PostEntity>> all(Pageable pageable) {
+        var pageableList = postRepository.findAll(pageable);
+
+        var pagination = Pagination.builder()
+                .page(pageableList.getNumber())
+                .size(pageableList.getSize())
+                .currentElements(pageableList.getNumberOfElements())
+                .totalElements( pageableList.getTotalElements())
+                .totalPages(pageableList.getTotalPages())
+                .build()
+                ;
+
+        return Api.<List<PostEntity>>builder()
+                .body(pageableList.toList())
+                .pagination(pagination)
+                .build();
     }
 
     public PostEntity delete(@Valid PostViewRequest postViewRequest) {
